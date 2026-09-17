@@ -10,6 +10,10 @@ class ApplicationController < ActionController::Base
     ::Person.find_by(id: params[:signed_in_as])
   end
 
+  def after_settings_change(section:, person:)
+    response.headers["X-Settings-Change"] = "#{section.key}:#{person.id}"
+  end
+
   def can?(capability)
     params[:capabilities].to_s.split(",").include?(capability.to_s)
   end
