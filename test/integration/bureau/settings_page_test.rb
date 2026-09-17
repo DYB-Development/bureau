@@ -11,6 +11,12 @@ module Bureau
 
     teardown { Bureau.reset! }
 
+    test "the settings page renders inside the app's own layout" do
+      get "/bureau"
+
+      assert_select "title", text: "Dummy"
+    end
+
     test "the settings page names itself" do
       get "/bureau"
 
