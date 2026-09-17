@@ -105,5 +105,11 @@ module Bureau
 
       assert_nil response.headers["X-Settings-Change"]
     end
+
+    test "the profile section shows why a name the record will not take was refused" do
+      patch "/bureau/profile", params: { signed_in_as: @person.id, name: "" }
+
+      assert_select "body", text: /Name can't be blank/
+    end
   end
 end
