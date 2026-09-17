@@ -10,11 +10,16 @@ module Bureau
     @registry ||= Registry.new
   end
 
-  def self.section(key, area:, title:)
-    registry.add(Section.new(key: key, area: area, title: title))
+  def self.section(key, area:, title:, renders: nil)
+    registry.add(Section.new(key: key, area: area, title: title, renders: renders))
   end
 
   def self.reset!
     @registry = nil
+    register_own_sections
+  end
+
+  def self.register_own_sections
+    section :profile, area: :user, title: "Profile", renders: "bureau/sections/profile"
   end
 end

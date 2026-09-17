@@ -2,7 +2,7 @@
   <section aria-label="<%= area.to_s.titleize %>">
     <nav aria-label="Settings">
       <% sections.each do |section| %>
-        <%= link_to section.title, "#" %>
+        <%= link_to section.title, section_path(section.key) %>
       <% end %>
     </nav>
   </section>
