@@ -24,5 +24,13 @@ module Bureau
 
       assert_select "nav[aria-label=Settings] a", text: "Notifications"
     end
+
+    test "a section in another area is listed under its own heading" do
+      Bureau.section :members, area: :team, title: "Team"
+
+      get "/bureau/settings"
+
+      assert_select "section[aria-label=Team] a", text: "Team"
+    end
   end
 end

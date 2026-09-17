@@ -1,7 +1,7 @@
 module Bureau
   class SettingsController < ApplicationController
     def show
-      @sections = Bureau.registry.in_area(:user)
+      @areas = Bureau.registry.areas
     end
   end
 end
