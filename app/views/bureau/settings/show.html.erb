@@ -1,0 +1,9 @@
+<% @areas.each do |area, sections| %>
+  <section aria-label="<%= area.to_s.titleize %>">
+    <nav aria-label="Settings">
+      <% sections.each do |section| %>
+        <%= link_to section.title, "#" %>
+      <% end %>
+    </nav>
+  </section>
+<% end %>
