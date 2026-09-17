@@ -1,6 +1,8 @@
 module Bureau
   class ApplicationController < ::ApplicationController
-    helper KeystoneUiHelper
+    helper KeystoneUiHelper, Bureau::Engine.routes.url_helpers, Bureau::AppRoutesHelper
+
+    before_action { Bureau::AppRoutesHelper.define_app_route_helpers }
 
     private
 
