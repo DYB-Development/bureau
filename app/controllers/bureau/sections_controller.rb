@@ -11,12 +11,16 @@ module Bureau
     end
 
     def update
-      ChangeName.new(person: current_person, values: { name: params[:name] }).call
+      @section.action.new(person: current_person, values: submitted_values).call
 
       redirect_to section_path(params[:key])
     end
 
     private
+
+    def submitted_values
+      params.except(:controller, :action, :key, :signed_in_as).permit!.to_h.symbolize_keys
+    end
 
     def set_section
       @section = Bureau.registry.find(params[:key])

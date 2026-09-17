@@ -65,5 +65,13 @@ module Bureau
 
       assert_select "nav[aria-label=Settings] a[aria-current=page]", text: "Profile"
     end
+
+    test "submitting a section runs the object that section names" do
+      Bureau.section :nickname, area: :user, title: "Nickname", renders: "bureau/sections/profile", runs: "DummyRename"
+
+      patch "/bureau/nickname", params: { signed_in_as: @person.id, name: "Renamed Person" }
+
+      assert_equal "Renamed Person of the dummy app", @person.reload.name
+    end
   end
 end
