@@ -4,6 +4,8 @@ module Bureau
     before_action :refuse_without_capability
 
     def show
+      return redirect_to @section.at if @section.at
+
       @person = current_person
       @areas = visible_areas
 
