@@ -10,6 +10,10 @@ class ApplicationController < ActionController::Base
     ::Person.find_by(id: params[:signed_in_as])
   end
 
+  def can?(capability)
+    params[:capabilities].to_s.split(",").include?(capability.to_s)
+  end
+
   def require_sign_in
     redirect_to "/sign_in" if params[:signed_in] == "no"
   end
