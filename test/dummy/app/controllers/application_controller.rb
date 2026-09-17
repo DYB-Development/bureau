@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   private
 
   def current_person
-    ::Person.find_by(id: params[:person_id])
+    ::Person.find_by(id: params[:signed_in_as])
   end
 
   def require_sign_in
