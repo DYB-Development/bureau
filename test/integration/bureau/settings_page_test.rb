@@ -32,5 +32,11 @@ module Bureau
 
       assert_select "section[aria-label=Team] a", text: "Team"
     end
+
+    test "a person who is not signed in gets the app's own answer" do
+      get "/bureau/settings", params: { signed_in: "no" }
+
+      assert_redirected_to "/sign_in"
+    end
   end
 end
