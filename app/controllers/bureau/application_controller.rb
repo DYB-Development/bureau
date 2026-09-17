@@ -4,6 +4,12 @@ module Bureau
 
     private
 
+    def visible_areas
+      Bureau.registry.areas
+        .transform_values { |sections| sections.select { |section| allowed?(section) } }
+        .reject { |_area, sections| sections.empty? }
+    end
+
     def allowed?(section)
       section.capability.nil? || can?(section.capability)
     end

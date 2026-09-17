@@ -5,8 +5,9 @@ module Bureau
 
     def show
       @person = current_person
+      @areas = visible_areas
 
-      render partial: @section.renders
+      render template: "bureau/settings/show"
     end
 
     def update
