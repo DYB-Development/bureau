@@ -33,6 +33,12 @@ module Bureau
       assert_select "section[aria-label=Team] a", text: "Team"
     end
 
+    test "the settings page links a section to its own page" do
+      get "/bureau/settings"
+
+      assert_select "nav[aria-label=Settings] a[href=?]", "/bureau/settings/profile"
+    end
+
     test "a person who is not signed in gets the app's own answer" do
       get "/bureau/settings", params: { signed_in: "no" }
 
