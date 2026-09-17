@@ -39,5 +39,11 @@ module Bureau
 
       assert_response :not_found
     end
+
+    test "submitting to a key no section is registered under is not found" do
+      patch "/bureau/nope", params: { signed_in_as: @person.id, name: "Renamed Person" }
+
+      assert_response :not_found
+    end
   end
 end
