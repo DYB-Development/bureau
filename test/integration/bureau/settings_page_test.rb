@@ -39,6 +39,14 @@ module Bureau
       assert_select "nav[aria-label=Settings] a[href=?]", "/bureau/profile"
     end
 
+    test "a section whose capability the person does not hold is not listed" do
+      Bureau.section :team, area: :team, title: "Team", capability: :manage_team
+
+      get "/bureau"
+
+      assert_select "section[aria-label=Team] a", text: "Team", count: 0
+    end
+
     test "a person who is not signed in gets the app's own answer" do
       get "/bureau", params: { signed_in: "no" }
 
