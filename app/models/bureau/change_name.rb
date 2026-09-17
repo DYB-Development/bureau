@@ -1,12 +1,12 @@
 module Bureau
   class ChangeName
-    def initialize(person:, name:)
+    def initialize(person:, values:)
       @person = person
-      @name = name
+      @values = values
     end
 
     def call
-      @person.update(name: @name)
+      @person.update(name: @values[:name])
     end
   end
 end
