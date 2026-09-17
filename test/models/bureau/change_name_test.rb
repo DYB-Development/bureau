@@ -7,7 +7,7 @@ module Bureau
     test "changing a name puts the new name on the person" do
       person = ::Person.create!(name: "Pretend Person")
 
-      ChangeName.new(person: person, name: "Renamed Person").call
+      ChangeName.new(person: person, values: { name: "Renamed Person" }).call
 
       assert_equal "Renamed Person", person.reload.name
     end

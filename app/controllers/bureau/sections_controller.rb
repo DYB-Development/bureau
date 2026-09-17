@@ -11,7 +11,7 @@ module Bureau
     end
 
     def update
-      ChangeName.new(person: current_person, name: params[:name]).call
+      ChangeName.new(person: current_person, values: { name: params[:name] }).call
 
       redirect_to section_path(params[:key])
     end
