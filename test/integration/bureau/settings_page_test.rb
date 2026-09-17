@@ -4,7 +4,10 @@ require "test_helper"
 
 module Bureau
   class SettingsPageTest < ActionDispatch::IntegrationTest
-    setup { Bureau.reset! }
+    setup do
+      Bureau.reset!
+      DummySettings.register
+    end
 
     teardown { Bureau.reset! }
 
@@ -14,6 +17,12 @@ module Bureau
       get "/bureau/settings"
 
       assert_select "nav[aria-label=Settings] a", text: "Profile"
+    end
+
+    test "a section the app registers is listed" do
+      get "/bureau/settings"
+
+      assert_select "nav[aria-label=Settings] a", text: "Notifications"
     end
   end
 end
