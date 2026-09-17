@@ -11,6 +11,8 @@ module Bureau
     end
 
     def update
+      return head :unprocessable_content unless @section.action
+
       @section.action.new(person: current_person, values: submitted_values).call
 
       redirect_to section_path(params[:key])
