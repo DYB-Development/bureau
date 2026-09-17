@@ -11,6 +11,12 @@ module Bureau
 
     teardown { Bureau.reset! }
 
+    test "the settings page names itself" do
+      get "/bureau"
+
+      assert_select "h1", text: "Settings"
+    end
+
     test "the settings page lists a section registered under the user area" do
       Bureau.section :profile, area: :user, title: "Profile"
 
