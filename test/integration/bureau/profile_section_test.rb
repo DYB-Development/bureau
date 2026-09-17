@@ -85,5 +85,13 @@ module Bureau
 
       assert_equal "nickname:#{@person.id}", response.headers["X-Settings-Change"]
     end
+
+    test "the app is not told when the submission was refused" do
+      Bureau.section :spare, area: :user, title: "Spare", renders: "bureau/sections/profile"
+
+      patch "/bureau/spare", params: { signed_in_as: @person.id, name: "Renamed Person" }
+
+      assert_nil response.headers["X-Settings-Change"]
+    end
   end
 end
