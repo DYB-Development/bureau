@@ -11,8 +11,8 @@ module Bureau
     @registry ||= Registry.new
   end
 
-  def self.section(key, area:, title:, renders: nil, capability: nil, runs: nil)
-    registry.add(Section.new(key: key, area: area, title: title, renders: renders, capability: capability, runs: runs))
+  def self.section(key, area:, title:, renders: nil, capability: nil, runs: nil, at: nil)
+    registry.add(Section.new(key: key, area: area, title: title, renders: renders, capability: capability, runs: runs, at: at))
   end
 
   def self.reset!
