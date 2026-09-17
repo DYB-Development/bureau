@@ -111,5 +111,21 @@ module Bureau
 
       assert_select "body", text: /Name can't be blank/
     end
+
+    test "opening a section that lives on another page goes to that page" do
+      Bureau.section :team, area: :team, title: "Team", at: "/team/members"
+
+      get "/bureau/team", params: { signed_in_as: @person.id }
+
+      assert_redirected_to "/team/members"
+    end
+
+    test "submitting to a section that lives on another page is refused" do
+      Bureau.section :team, area: :team, title: "Team", at: "/team/members"
+
+      patch "/bureau/team", params: { signed_in_as: @person.id }
+
+      assert_response :unprocessable_content
+    end
   end
 end
