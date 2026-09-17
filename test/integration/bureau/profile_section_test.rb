@@ -45,5 +45,13 @@ module Bureau
 
       assert_response :not_found
     end
+
+    test "opening a section without its capability is refused" do
+      Bureau.section :team, area: :team, title: "Team", renders: "bureau/sections/profile", capability: :manage_team
+
+      get "/bureau/team", params: { signed_in_as: @person.id }
+
+      assert_response :forbidden
+    end
   end
 end

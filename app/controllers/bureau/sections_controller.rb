@@ -1,6 +1,7 @@
 module Bureau
   class SectionsController < ApplicationController
     before_action :set_section
+    before_action :refuse_without_capability
 
     def show
       @person = current_person
@@ -20,6 +21,10 @@ module Bureau
       @section = Bureau.registry.find(params[:key])
 
       raise ActionController::RoutingError, "No settings section named #{params[:key]}" unless @section
+    end
+
+    def refuse_without_capability
+      head :forbidden unless allowed?(@section)
     end
   end
 end
