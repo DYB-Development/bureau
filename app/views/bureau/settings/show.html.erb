@@ -7,7 +7,7 @@
         <%= ui_panel do %>
           <nav aria-label="Settings">
             <% sections.each do |section| %>
-              <%= link_to section.title, section_path(section.key) %>
+              <%= link_to section.title, section_path(section.key), "aria-current": ("page" if section == @section) %>
             <% end %>
           </nav>
         <% end %>

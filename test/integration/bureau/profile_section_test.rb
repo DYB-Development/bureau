@@ -59,5 +59,11 @@ module Bureau
 
       assert_select "nav[aria-label=Settings] a", text: "Profile"
     end
+
+    test "the section a person opened is marked in the list" do
+      get "/bureau/profile", params: { signed_in_as: @person.id }
+
+      assert_select "nav[aria-label=Settings] a[aria-current=page]", text: "Profile"
+    end
   end
 end
