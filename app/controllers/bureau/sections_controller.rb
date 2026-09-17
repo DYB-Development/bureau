@@ -14,11 +14,18 @@ module Bureau
       return head :unprocessable_content unless @section.action
 
       @section.action.new(person: current_person, values: submitted_values).call
+      tell_the_app_it_ran
 
       redirect_to section_path(params[:key])
     end
 
     private
+
+    def tell_the_app_it_ran
+      return unless respond_to?(:after_settings_change, true)
+
+      after_settings_change(section: @section, person: current_person)
+    end
 
     def submitted_values
       params.except(:controller, :action, :key, :signed_in_as).permit!.to_h.symbolize_keys
