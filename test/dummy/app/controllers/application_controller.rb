@@ -6,6 +6,10 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def current_person
+    ::Person.find_by(id: params[:person_id])
+  end
+
   def require_sign_in
     redirect_to "/sign_in" if params[:signed_in] == "no"
   end
