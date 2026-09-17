@@ -53,5 +53,11 @@ module Bureau
 
       assert_response :forbidden
     end
+
+    test "opening a section lists the sections beside it" do
+      get "/bureau/profile", params: { signed_in_as: @person.id }
+
+      assert_select "nav[aria-label=Settings] a", text: "Profile"
+    end
   end
 end
