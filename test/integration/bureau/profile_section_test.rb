@@ -99,5 +99,11 @@ module Bureau
 
       assert_select "body", text: /That name is spoken for/
     end
+
+    test "a refused change does not tell the app a change was made" do
+      patch "/bureau/spoken_for", params: { signed_in_as: @person.id, name: "Renamed Person" }
+
+      assert_nil response.headers["X-Settings-Change"]
+    end
   end
 end
