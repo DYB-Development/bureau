@@ -4,6 +4,7 @@ require "bureau/version"
 require "bureau/engine"
 require "bureau/registry"
 require "bureau/section"
+require "bureau/result"
 
 module Bureau
   def self.registry

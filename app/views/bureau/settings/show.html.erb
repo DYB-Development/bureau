@@ -18,6 +18,9 @@
       <% end %>
     <% end %>
 
-    <%= render partial: @section.renders if @section %>
+    <%= ui_section do %>
+      <%= ui_alert(message: @refusal, type: :error) if @refusal %>
+      <%= render partial: @section.renders if @section %>
+    <% end %>
   <% end %>
 <% end %>

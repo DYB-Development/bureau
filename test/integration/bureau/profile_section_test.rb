@@ -93,5 +93,23 @@ module Bureau
 
       assert_nil response.headers["X-Settings-Change"]
     end
+
+    test "a person whose change is refused is shown the reason" do
+      patch "/bureau/spoken_for", params: { signed_in_as: @person.id, name: "Renamed Person" }
+
+      assert_select "body", text: /That name is spoken for/
+    end
+
+    test "a refused change does not tell the app a change was made" do
+      patch "/bureau/spoken_for", params: { signed_in_as: @person.id, name: "Renamed Person" }
+
+      assert_nil response.headers["X-Settings-Change"]
+    end
+
+    test "the profile section shows why a name the record will not take was refused" do
+      patch "/bureau/profile", params: { signed_in_as: @person.id, name: "" }
+
+      assert_select "body", text: /Name can't be blank/
+    end
   end
 end

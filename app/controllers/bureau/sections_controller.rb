@@ -13,13 +13,23 @@ module Bureau
     def update
       return head :unprocessable_content unless @section.action
 
-      @section.action.new(person: current_person, values: submitted_values).call
+      result = @section.action.new(person: current_person, values: submitted_values).call
+      return show_refusal(result.message) unless result.ok?
+
       tell_the_app_it_ran
 
       redirect_to section_path(params[:key])
     end
 
     private
+
+    def show_refusal(message)
+      @person = current_person
+      @areas = visible_areas
+      @refusal = message
+
+      render template: "bureau/settings/show", status: :unprocessable_content
+    end
 
     def tell_the_app_it_ran
       return unless respond_to?(:after_settings_change, true)
