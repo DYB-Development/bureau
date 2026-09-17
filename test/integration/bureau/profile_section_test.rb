@@ -33,5 +33,11 @@ module Bureau
 
       assert_equal "Other Person", other.reload.name
     end
+
+    test "a key no section is registered under is not found" do
+      get "/bureau/nope", params: { signed_in_as: @person.id }
+
+      assert_response :not_found
+    end
   end
 end
