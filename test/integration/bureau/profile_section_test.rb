@@ -93,5 +93,11 @@ module Bureau
 
       assert_nil response.headers["X-Settings-Change"]
     end
+
+    test "a person whose change is refused is shown the reason" do
+      patch "/bureau/spoken_for", params: { signed_in_as: @person.id, name: "Renamed Person" }
+
+      assert_select "body", text: /That name is spoken for/
+    end
   end
 end

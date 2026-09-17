@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-class DummyRename
+class DummyRefusal
   def initialize(person:, values:)
     @person = person
     @values = values
   end
 
   def call
-    @person.update(name: "#{@values[:name]} of the dummy app")
-
-    Bureau::Result.ok
+    Bureau::Result.refused("That name is spoken for")
   end
 end
