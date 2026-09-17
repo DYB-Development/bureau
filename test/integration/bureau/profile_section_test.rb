@@ -127,5 +127,11 @@ module Bureau
 
       assert_response :unprocessable_content
     end
+
+    test "a section's template is given the person and where to submit" do
+      get "/bureau/from_elsewhere", params: { signed_in_as: @person.id }
+
+      assert_select "#from-elsewhere", text: "Shown to Pretend Person, submitting to /bureau/from_elsewhere"
+    end
   end
 end
