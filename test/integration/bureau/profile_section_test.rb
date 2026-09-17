@@ -17,5 +17,13 @@ module Bureau
 
       assert_select "input[name='name'][value=?]", "Pretend Person"
     end
+
+    test "the profile section shows the new name a person submits" do
+      patch "/bureau/settings/profile", params: { person_id: @person.id, name: "Renamed Person" }
+
+      get "/bureau/settings/profile", params: { person_id: @person.id }
+
+      assert_select "input[name='name'][value=?]", "Renamed Person"
+    end
   end
 end
