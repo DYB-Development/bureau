@@ -11,6 +11,12 @@ module Bureau
       section
     end
 
+    def replace(section)
+      @sections.delete(taken_by_another(section))
+      @sections << section
+      section
+    end
+
     def taken_by_another(section)
       @sections.find { |existing| existing.key == section.key && existing.area == section.area }
     end

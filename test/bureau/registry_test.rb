@@ -10,5 +10,14 @@ module Bureau
         registry.add(Section.new(key: :profile, area: :user, title: "Something else"))
       end
     end
+
+    test "a section that says it replaces the one already registered takes its place" do
+      registry = Registry.new
+      registry.add(Section.new(key: :profile, area: :user, title: "Profile"))
+
+      registry.replace(Section.new(key: :profile, area: :user, title: "Something else"))
+
+      assert_equal "Something else", registry.find(:profile).title
+    end
   end
 end
