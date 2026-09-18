@@ -133,5 +133,11 @@ module Bureau
 
       assert_select "#from-elsewhere", text: "Shown to Pretend Person in the dummy account, submitting to /bureau/from_elsewhere"
     end
+
+    test "a section with named actions submits each form to its own address" do
+      get "/bureau/team", params: { signed_in_as: @person.id }
+
+      assert_select "form#invite[action=?]", "/bureau/team/invite"
+    end
   end
 end

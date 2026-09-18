@@ -1,0 +1,8 @@
+<form id="invite" action="<%= submit_urls[:invite] %>" method="post">
+  <input type="hidden" name="_method" value="patch">
+  <input type="text" name="email">
+</form>
+<form id="rename" action="<%= submit_urls[:rename] %>" method="post">
+  <input type="hidden" name="_method" value="patch">
+  <input type="text" name="name">
+</form>

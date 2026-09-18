@@ -13,7 +13,18 @@ module Bureau
     end
 
     def action
-      runs&.constantize
+      actions[:the_only]
+    end
+
+    def actions
+      return {} if runs.nil?
+      return { the_only: runs.constantize } unless runs.is_a?(Hash)
+
+      runs.transform_values(&:constantize)
+    end
+
+    def named_actions?
+      runs.is_a?(Hash)
     end
   end
 end

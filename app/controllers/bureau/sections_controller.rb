@@ -9,6 +9,7 @@ module Bureau
       @person = current_person
       @account = current_account_for_settings
       @areas = visible_areas
+      @section_addresses = section_addresses
 
       render template: "bureau/settings/show"
     end
@@ -26,6 +27,12 @@ module Bureau
 
     private
 
+    def section_addresses
+      return { submit_url: section_path(@section.key) } unless @section.named_actions?
+
+      { submit_urls: @section.actions.keys.to_h { |name| [ name, section_action_path(@section.key, name) ] } }
+    end
+
     def current_account_for_settings
       respond_to?(:current_account, true) ? current_account : nil
     end
@@ -34,6 +41,7 @@ module Bureau
       @person = current_person
       @account = current_account_for_settings
       @areas = visible_areas
+      @section_addresses = section_addresses
       @refusal = message
 
       render template: "bureau/settings/show", status: :unprocessable_content
