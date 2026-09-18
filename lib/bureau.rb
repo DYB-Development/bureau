@@ -5,6 +5,7 @@ require "bureau/engine"
 require "bureau/registry"
 require "bureau/section"
 require "bureau/result"
+require "bureau/settings_account"
 
 module Bureau
   def self.registry
