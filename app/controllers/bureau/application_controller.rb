@@ -6,6 +6,13 @@ module Bureau
 
     private
 
+    def account_settings_act_on
+      return settings_account if respond_to?(:settings_account, true)
+      return current_account if respond_to?(:current_account, true)
+
+      nil
+    end
+
     def visible_areas
       Bureau.registry.areas
         .transform_values { |sections| sections.select { |section| allowed?(section) } }
