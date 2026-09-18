@@ -11,6 +11,14 @@ module Bureau
       end
     end
 
+    test "a section running an object the app cannot find is refused" do
+      registry = Registry.new
+
+      assert_raises(BadRegistration) do
+        registry.add(Section.new(key: :profile, area: :user, title: "Profile", runs: "NoSuchObject"))
+      end
+    end
+
     test "a section that says it replaces the one already registered takes its place" do
       registry = Registry.new
       registry.add(Section.new(key: :profile, area: :user, title: "Profile"))

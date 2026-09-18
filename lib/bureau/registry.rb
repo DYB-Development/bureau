@@ -7,6 +7,7 @@ module Bureau
     def add(section)
       raise BadRegistration if taken_by_another(section)
 
+      refuse_objects_the_app_cannot_find(section)
       @sections << section
       section
     end
@@ -15,6 +16,12 @@ module Bureau
       @sections.delete(taken_by_another(section))
       @sections << section
       section
+    end
+
+    def refuse_objects_the_app_cannot_find(section)
+      section.actions
+    rescue NameError => missing
+      raise BadRegistration, missing.message
     end
 
     def taken_by_another(section)
