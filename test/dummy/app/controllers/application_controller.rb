@@ -18,6 +18,10 @@ class ApplicationController < ActionController::Base
     "the dummy account"
   end
 
+  def settings_account
+    "the account settings act on"
+  end
+
   def can?(capability)
     params[:capabilities].to_s.split(",").include?(capability.to_s)
   end

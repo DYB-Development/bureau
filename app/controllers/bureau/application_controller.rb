@@ -6,6 +6,10 @@ module Bureau
 
     private
 
+    def account_settings_act_on
+      SettingsAccount.of(self)
+    end
+
     def visible_areas
       Bureau.registry.areas
         .transform_values { |sections| sections.select { |section| allowed?(section) } }
