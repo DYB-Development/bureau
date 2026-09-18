@@ -1,0 +1,52 @@
+scope: settings — one settings page whose sections are registered by the app and by other gems
+
+install:
+  - gem "bureau"
+  - mount Bureau::Engine
+  - current_person
+  - settings_account
+  - can?
+  - after_settings_change
+  - Bureau.capabilities
+
+develop:
+  - Bureau.section
+  - Bureau.replace_section
+  - Bureau.registry
+  - Bureau::Result.ok
+  - Bureau::Result.refused
+  - Bureau::BadRegistration
+  - section.key
+  - section.area
+  - section.title
+  - section.renders
+  - section.capability
+  - section.runs
+  - section.at
+  - section.action
+  - section.actions
+  - section.named_actions?
+  - person
+  - account
+  - selection
+  - submit_url
+  - submit_urls
+
+sources:
+  - lib/bureau.rb
+  - lib/bureau/registry.rb
+  - lib/bureau/section.rb
+  - lib/bureau/result.rb
+  - lib/bureau/bad_registration.rb
+  - lib/bureau/settings_account.rb
+  - lib/bureau/engine.rb
+  - config/routes.rb
+  - app/controllers/bureau/application_controller.rb
+  - app/controllers/bureau/sections_controller.rb
+  - app/controllers/bureau/settings_controller.rb
+  - app/views/bureau/settings/show.html.erb
+  - app/views/bureau/sections/_profile.html.erb
+  - app/models/bureau/change_name.rb
+  - test/dummy/app/controllers/application_controller.rb
+  - test/dummy/app/models/dummy_settings.rb
+  - lib/bureau/reference/guide.md
