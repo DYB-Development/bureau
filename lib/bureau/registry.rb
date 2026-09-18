@@ -8,17 +8,30 @@ module Bureau
     def add(section)
       raise BadRegistration, "#{section.key} is already a section in the #{section.area} area" if taken_by_another(section)
 
-      refuse_objects_the_app_cannot_find(section)
-      refuse_capabilities_the_app_does_not_recognise(section)
-      @sections << section
-      section
+      replace(section)
     end
 
     def replace(section)
+      refuse_objects_the_app_cannot_find(section)
+      refuse_capabilities_the_app_does_not_recognise(section)
       @sections.delete(taken_by_another(section))
       @sections << section
       section
     end
+
+    def in_area(area)
+      @sections.select { |section| section.area == area.to_sym }
+    end
+
+    def find(key)
+      @sections.find { |section| section.key == key.to_sym }
+    end
+
+    def areas
+      @sections.group_by(&:area)
+    end
+
+    private
 
     def refuse_objects_the_app_cannot_find(section)
       section.actions
@@ -40,18 +53,6 @@ module Bureau
 
     def taken_by_another(section)
       @sections.find { |existing| existing.key == section.key && existing.area == section.area }
-    end
-
-    def in_area(area)
-      @sections.select { |section| section.area == area.to_sym }
-    end
-
-    def find(key)
-      @sections.find { |section| section.key == key.to_sym }
-    end
-
-    def areas
-      @sections.group_by(&:area)
     end
   end
 end
