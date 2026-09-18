@@ -1,6 +1,7 @@
 module Bureau
   class Registry
-    def initialize
+    def initialize(capabilities: nil)
+      @capabilities = capabilities
       @sections = []
     end
 
@@ -8,6 +9,7 @@ module Bureau
       raise BadRegistration if taken_by_another(section)
 
       refuse_objects_the_app_cannot_find(section)
+      refuse_capabilities_the_app_does_not_recognise(section)
       @sections << section
       section
     end
@@ -22,6 +24,18 @@ module Bureau
       section.actions
     rescue NameError => missing
       raise BadRegistration, missing.message
+    end
+
+    def refuse_capabilities_the_app_does_not_recognise(section)
+      return if section.capability.nil? || recognised_capabilities.nil?
+      return if recognised_capabilities.map(&:to_sym).include?(section.capability.to_sym)
+
+      raise BadRegistration
+    end
+
+    def recognised_capabilities
+      declared = @capabilities || Bureau.capabilities
+      declared.respond_to?(:call) ? declared.call : declared
     end
 
     def taken_by_another(section)

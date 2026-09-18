@@ -19,6 +19,14 @@ module Bureau
       end
     end
 
+    test "a section naming a capability the app does not recognise is refused" do
+      registry = Registry.new(capabilities: [ :manage_team ])
+
+      assert_raises(BadRegistration) do
+        registry.add(Section.new(key: :team, area: :team, title: "Team", capability: :mange_team))
+      end
+    end
+
     test "a section that says it replaces the one already registered takes its place" do
       registry = Registry.new
       registry.add(Section.new(key: :profile, area: :user, title: "Profile"))

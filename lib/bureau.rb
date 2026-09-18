@@ -9,6 +9,10 @@ require "bureau/result"
 require "bureau/settings_account"
 
 module Bureau
+  class << self
+    attr_accessor :capabilities
+  end
+
   def self.registry
     @registry ||= Registry.new
   end
