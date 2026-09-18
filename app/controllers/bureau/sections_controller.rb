@@ -7,7 +7,7 @@ module Bureau
       return redirect_to @section.at if @section.at
 
       @person = current_person
-      @account = current_account_for_settings
+      @account = account_settings_act_on
       @areas = visible_areas
       @section_addresses = section_addresses
       @selection = selection
@@ -18,7 +18,7 @@ module Bureau
     def update
       return head :unprocessable_content unless requested_action
 
-      result = requested_action.new(person: current_person, account: current_account_for_settings, values: submitted_values).call
+      result = requested_action.new(person: current_person, account: account_settings_act_on, values: submitted_values).call
       return show_refusal(result.message) unless result.ok?
 
       tell_the_app_it_ran
@@ -44,13 +44,9 @@ module Bureau
       { submit_urls: @section.actions.keys.to_h { |name| [ name, section_action_path(@section.key, name) ] } }
     end
 
-    def current_account_for_settings
-      respond_to?(:current_account, true) ? current_account : nil
-    end
-
     def show_refusal(message)
       @person = current_person
-      @account = current_account_for_settings
+      @account = account_settings_act_on
       @areas = visible_areas
       @section_addresses = section_addresses
       @selection = selection

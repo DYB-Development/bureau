@@ -69,7 +69,7 @@ module Bureau
     test "submitting a section the app registered runs the object that section names" do
       patch "/bureau/nickname", params: { signed_in_as: @person.id, name: "Renamed Person" }
 
-      assert_equal "Renamed Person of the dummy account", @person.reload.name
+      assert_equal "Renamed Person of the account settings act on", @person.reload.name
     end
 
     test "submitting a section that names no object is refused" do
@@ -131,7 +131,7 @@ module Bureau
     test "a section's template is given the person and where to submit" do
       get "/bureau/from_elsewhere", params: { signed_in_as: @person.id, looking_at: "a-person" }
 
-      assert_select "#from-elsewhere", text: "Shown to Pretend Person in the dummy account, submitting to /bureau/from_elsewhere, looking at a-person"
+      assert_select "#from-elsewhere", text: "Shown to Pretend Person in the account settings act on, submitting to /bureau/from_elsewhere, looking at a-person"
     end
 
     test "a section with named actions submits each form to its own address" do
