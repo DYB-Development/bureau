@@ -10,6 +10,7 @@ module Bureau
       @account = current_account_for_settings
       @areas = visible_areas
       @section_addresses = section_addresses
+      @selection = selection
 
       render template: "bureau/settings/show"
     end
@@ -33,6 +34,10 @@ module Bureau
       @section.action
     end
 
+    def selection
+      params.except(:controller, :action, :key, :action_name).permit!.to_h.symbolize_keys
+    end
+
     def section_addresses
       return { submit_url: section_path(@section.key) } unless @section.named_actions?
 
@@ -48,6 +53,7 @@ module Bureau
       @account = current_account_for_settings
       @areas = visible_areas
       @section_addresses = section_addresses
+      @selection = selection
       @refusal = message
 
       render template: "bureau/settings/show", status: :unprocessable_content
