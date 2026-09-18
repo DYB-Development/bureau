@@ -20,7 +20,7 @@
 
     <%= ui_section do %>
       <%= ui_alert(message: @refusal, type: :error) if @refusal %>
-      <%= render partial: @section.renders, locals: {person: @person, submit_url: section_path(@section.key)} if @section %>
+      <%= render partial: @section.renders, locals: {person: @person, account: @account, submit_url: section_path(@section.key)} if @section %>
     <% end %>
   <% end %>
 <% end %>
