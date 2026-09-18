@@ -5,9 +5,14 @@ module Bureau
     end
 
     def add(section)
-      @sections.reject! { |existing| existing.key == section.key && existing.area == section.area }
+      raise BadRegistration if taken_by_another(section)
+
       @sections << section
       section
+    end
+
+    def taken_by_another(section)
+      @sections.find { |existing| existing.key == section.key && existing.area == section.area }
     end
 
     def in_area(area)

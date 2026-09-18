@@ -2,6 +2,7 @@ require "keystone_ui"
 
 require "bureau/version"
 require "bureau/engine"
+require "bureau/bad_registration"
 require "bureau/registry"
 require "bureau/section"
 require "bureau/result"
