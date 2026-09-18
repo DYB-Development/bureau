@@ -7,6 +7,7 @@ module Bureau
       return redirect_to @section.at if @section.at
 
       @person = current_person
+      @account = current_account_for_settings
       @areas = visible_areas
 
       render template: "bureau/settings/show"
@@ -31,6 +32,7 @@ module Bureau
 
     def show_refusal(message)
       @person = current_person
+      @account = current_account_for_settings
       @areas = visible_areas
       @refusal = message
 
