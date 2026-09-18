@@ -129,9 +129,9 @@ module Bureau
     end
 
     test "a section's template is given the person and where to submit" do
-      get "/bureau/from_elsewhere", params: { signed_in_as: @person.id }
+      get "/bureau/from_elsewhere", params: { signed_in_as: @person.id, looking_at: "a-person" }
 
-      assert_select "#from-elsewhere", text: "Shown to Pretend Person in the dummy account, submitting to /bureau/from_elsewhere"
+      assert_select "#from-elsewhere", text: "Shown to Pretend Person in the dummy account, submitting to /bureau/from_elsewhere, looking at a-person"
     end
 
     test "a section with named actions submits each form to its own address" do
