@@ -24,7 +24,7 @@ module Bureau
     end
 
     test "the settings page lists a section registered under the user area" do
-      Bureau.section :profile, area: :user, title: "Profile"
+      Bureau.replace_section :profile, area: :user, title: "Profile"
 
       get "/bureau"
 
@@ -52,7 +52,7 @@ module Bureau
     end
 
     test "a section whose capability the person does not hold is not listed" do
-      Bureau.section :team, area: :team, title: "Team", capability: :manage_team
+      Bureau.replace_section :team, area: :team, title: "Team", capability: :manage_team
 
       get "/bureau"
 
@@ -60,7 +60,7 @@ module Bureau
     end
 
     test "a section registered with an address elsewhere links to that address" do
-      Bureau.section :team, area: :team, title: "Team", at: "/team/members"
+      Bureau.replace_section :team, area: :team, title: "Team", at: "/team/members"
 
       get "/bureau"
 
@@ -68,7 +68,7 @@ module Bureau
     end
 
     test "a section that lives on another page is hidden from a person without its capability" do
-      Bureau.section :team, area: :team, title: "Team", at: "/team/members", capability: :manage_team
+      Bureau.replace_section :team, area: :team, title: "Team", at: "/team/members", capability: :manage_team
 
       get "/bureau"
 
