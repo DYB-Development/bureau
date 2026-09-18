@@ -139,5 +139,17 @@ module Bureau
 
       assert_select "form#invite[action=?]", "/bureau/team/invite"
     end
+
+    test "submitting a named action runs the object that action names" do
+      patch "/bureau/team/invite", params: { signed_in_as: @person.id, email: "pretend@example.com" }
+
+      assert_equal "Pretend Person invited pretend@example.com", @person.reload.name
+    end
+
+    test "submitting an action a section does not name is refused" do
+      patch "/bureau/team/pretend", params: { signed_in_as: @person.id }
+
+      assert_response :unprocessable_content
+    end
   end
 end

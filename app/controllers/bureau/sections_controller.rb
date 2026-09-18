@@ -15,9 +15,9 @@ module Bureau
     end
 
     def update
-      return head :unprocessable_content unless @section.action
+      return head :unprocessable_content unless requested_action
 
-      result = @section.action.new(person: current_person, account: current_account_for_settings, values: submitted_values).call
+      result = requested_action.new(person: current_person, account: current_account_for_settings, values: submitted_values).call
       return show_refusal(result.message) unless result.ok?
 
       tell_the_app_it_ran
@@ -26,6 +26,12 @@ module Bureau
     end
 
     private
+
+    def requested_action
+      return @section.actions[params[:action_name].to_sym] if params[:action_name]
+
+      @section.action
+    end
 
     def section_addresses
       return { submit_url: section_path(@section.key) } unless @section.named_actions?
