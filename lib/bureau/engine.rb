@@ -3,7 +3,7 @@ module Bureau
     isolate_namespace Bureau
 
     config.to_prepare do
-      Bureau.register_own_sections
+      Bureau.prepare!
     end
   end
 end

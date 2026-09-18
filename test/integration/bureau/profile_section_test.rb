@@ -5,12 +5,12 @@ require "test_helper"
 module Bureau
   class ProfileSectionTest < ActionDispatch::IntegrationTest
     setup do
-      Bureau.reset!
+      Bureau.prepare!
       DummySettings.register
       @person = ::Person.create!(name: "Pretend Person")
     end
 
-    teardown { Bureau.reset! }
+    teardown { Bureau.prepare! }
 
     test "the profile section shows the person's current name" do
       get "/bureau/profile", params: { signed_in_as: @person.id }
@@ -47,7 +47,7 @@ module Bureau
     end
 
     test "opening a section without its capability is refused" do
-      Bureau.section :team, area: :team, title: "Team", renders: "bureau/sections/profile", capability: :manage_team
+      Bureau.replace_section :team, area: :team, title: "Team", renders: "bureau/sections/profile", capability: :manage_team
 
       get "/bureau/team", params: { signed_in_as: @person.id }
 
@@ -73,7 +73,7 @@ module Bureau
     end
 
     test "submitting a section that names no object is refused" do
-      Bureau.section :nickname, area: :user, title: "Nickname", renders: "bureau/sections/profile"
+      Bureau.replace_section :nickname, area: :user, title: "Nickname", renders: "bureau/sections/profile"
 
       patch "/bureau/nickname", params: { signed_in_as: @person.id, name: "Renamed Person" }
 
@@ -113,7 +113,7 @@ module Bureau
     end
 
     test "opening a section that lives on another page goes to that page" do
-      Bureau.section :team, area: :team, title: "Team", at: "/team/members"
+      Bureau.replace_section :team, area: :team, title: "Team", at: "/team/members"
 
       get "/bureau/team", params: { signed_in_as: @person.id }
 
@@ -121,7 +121,7 @@ module Bureau
     end
 
     test "submitting to a section that lives on another page is refused" do
-      Bureau.section :team, area: :team, title: "Team", at: "/team/members"
+      Bureau.replace_section :team, area: :team, title: "Team", at: "/team/members"
 
       patch "/bureau/team", params: { signed_in_as: @person.id }
 

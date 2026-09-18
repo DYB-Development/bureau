@@ -2,21 +2,30 @@ require "keystone_ui"
 
 require "bureau/version"
 require "bureau/engine"
+require "bureau/bad_registration"
 require "bureau/registry"
 require "bureau/section"
 require "bureau/result"
 require "bureau/settings_account"
 
 module Bureau
+  class << self
+    attr_accessor :capabilities
+  end
+
   def self.registry
     @registry ||= Registry.new
   end
 
-  def self.section(key, area:, title:, renders: nil, capability: nil, runs: nil, at: nil)
-    registry.add(Section.new(key: key, area: area, title: title, renders: renders, capability: capability, runs: runs, at: at))
+  def self.section(key, **details)
+    registry.add(Section.new(key: key, **details))
   end
 
-  def self.reset!
+  def self.replace_section(key, **details)
+    registry.replace(Section.new(key: key, **details))
+  end
+
+  def self.prepare!
     @registry = nil
     register_own_sections
   end
