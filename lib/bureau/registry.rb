@@ -6,7 +6,7 @@ module Bureau
     end
 
     def add(section)
-      raise BadRegistration if taken_by_another(section)
+      raise BadRegistration, "#{section.key} is already a section in the #{section.area} area" if taken_by_another(section)
 
       refuse_objects_the_app_cannot_find(section)
       refuse_capabilities_the_app_does_not_recognise(section)

@@ -11,6 +11,17 @@ module Bureau
       end
     end
 
+    test "the refusal for a key already taken names the key" do
+      registry = Registry.new
+      registry.add(Section.new(key: :profile, area: :user, title: "Profile"))
+
+      refusal = assert_raises(BadRegistration) do
+        registry.add(Section.new(key: :profile, area: :user, title: "Something else"))
+      end
+
+      assert_match "profile", refusal.message
+    end
+
     test "a section running an object the app cannot find is refused" do
       registry = Registry.new
 
