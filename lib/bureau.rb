@@ -21,7 +21,7 @@ module Bureau
     registry.replace(Section.new(key: key, **details))
   end
 
-  def self.reset!
+  def self.prepare!
     @registry = nil
     register_own_sections
   end

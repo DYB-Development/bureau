@@ -5,11 +5,11 @@ require "test_helper"
 module Bureau
   class SettingsPageTest < ActionDispatch::IntegrationTest
     setup do
-      Bureau.reset!
+      Bureau.prepare!
       DummySettings.register
     end
 
-    teardown { Bureau.reset! }
+    teardown { Bureau.prepare! }
 
     test "the settings page renders inside the app's own layout" do
       get "/bureau"

@@ -5,12 +5,12 @@ require "test_helper"
 module Bureau
   class ProfileSectionTest < ActionDispatch::IntegrationTest
     setup do
-      Bureau.reset!
+      Bureau.prepare!
       DummySettings.register
       @person = ::Person.create!(name: "Pretend Person")
     end
 
-    teardown { Bureau.reset! }
+    teardown { Bureau.prepare! }
 
     test "the profile section shows the person's current name" do
       get "/bureau/profile", params: { signed_in_as: @person.id }
