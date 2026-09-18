@@ -69,7 +69,7 @@ module Bureau
     test "submitting a section the app registered runs the object that section names" do
       patch "/bureau/nickname", params: { signed_in_as: @person.id, name: "Renamed Person" }
 
-      assert_equal "Renamed Person of the dummy app", @person.reload.name
+      assert_equal "Renamed Person of the dummy account", @person.reload.name
     end
 
     test "submitting a section that names no object is refused" do

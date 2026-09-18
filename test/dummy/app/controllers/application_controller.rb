@@ -14,6 +14,10 @@ class ApplicationController < ActionController::Base
     response.headers["X-Settings-Change"] = "#{section.key}:#{person.id}"
   end
 
+  def current_account
+    "the dummy account"
+  end
+
   def can?(capability)
     params[:capabilities].to_s.split(",").include?(capability.to_s)
   end

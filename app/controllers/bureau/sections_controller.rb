@@ -15,7 +15,7 @@ module Bureau
     def update
       return head :unprocessable_content unless @section.action
 
-      result = @section.action.new(person: current_person, values: submitted_values).call
+      result = @section.action.new(person: current_person, account: current_account_for_settings, values: submitted_values).call
       return show_refusal(result.message) unless result.ok?
 
       tell_the_app_it_ran
@@ -24,6 +24,10 @@ module Bureau
     end
 
     private
+
+    def current_account_for_settings
+      respond_to?(:current_account, true) ? current_account : nil
+    end
 
     def show_refusal(message)
       @person = current_person
