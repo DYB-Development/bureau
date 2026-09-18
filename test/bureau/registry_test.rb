@@ -38,6 +38,16 @@ module Bureau
       end
     end
 
+    test "the refusal for an unrecognised capability names the capability" do
+      registry = Registry.new(capabilities: [ :manage_team ])
+
+      refusal = assert_raises(BadRegistration) do
+        registry.add(Section.new(key: :team, area: :team, title: "Team", capability: :mange_team))
+      end
+
+      assert_match "mange_team", refusal.message
+    end
+
     test "a section that says it replaces the one already registered takes its place" do
       registry = Registry.new
       registry.add(Section.new(key: :profile, area: :user, title: "Profile"))

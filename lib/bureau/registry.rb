@@ -30,7 +30,7 @@ module Bureau
       return if section.capability.nil? || recognised_capabilities.nil?
       return if recognised_capabilities.map(&:to_sym).include?(section.capability.to_sym)
 
-      raise BadRegistration
+      raise BadRegistration, "#{section.capability} is not a capability this app recognises"
     end
 
     def recognised_capabilities
