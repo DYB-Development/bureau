@@ -23,5 +23,17 @@ module Bureau
 
       assert_not_includes JSON.parse(response.body).map { |section| section["key"] }, "team"
     end
+
+    test "a section names the actions it offers" do
+      get "/bureau/api/sections", params: { signed_in_as: @person.id }
+
+      assert_equal %w[invite rename], section_named("team")["actions"]
+    end
+
+    private
+
+    def section_named(key)
+      JSON.parse(response.body).find { |section| section["key"] == key }
+    end
   end
 end
