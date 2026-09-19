@@ -42,6 +42,21 @@ module Bureau
       assert_equal "That name is spoken for", JSON.parse(response.body)["message"]
     end
 
+    test "a refused change saves nothing" do
+      patch "/bureau/api/sections/spoken_for/spoken_for", params: { signed_in_as: @person.id, name: "Taken" }
+
+      assert_equal "Pretend Person", @person.reload.name
+    end
+
+    test "a caller is refused a section the person may not see" do
+      Bureau.replace_section :team, area: :team, title: "Team", capability: :manage_team,
+        runs: { invite: "DummyInvite" }
+
+      patch "/bureau/api/sections/team/invite", params: { signed_in_as: @person.id }
+
+      assert_response :forbidden
+    end
+
     private
 
     def section_named(key)

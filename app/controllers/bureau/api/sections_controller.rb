@@ -1,6 +1,8 @@
 module Bureau
   module Api
     class SectionsController < Bureau::ApplicationController
+      before_action :refuse_without_capability, only: :update
+
       def index
         render json: available_sections.map { |section| { key: section.key, actions: section.actions.keys } }
       end
@@ -12,6 +14,10 @@ module Bureau
       end
 
       private
+
+      def refuse_without_capability
+        head :forbidden unless section && allowed?(section)
+      end
 
       def requested_action
         section.actions[params[:action_name].to_sym]
