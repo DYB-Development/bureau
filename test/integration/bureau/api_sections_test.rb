@@ -36,6 +36,12 @@ module Bureau
       assert JSON.parse(response.body)["ok"]
     end
 
+    test "a caller whose change is refused is told why" do
+      patch "/bureau/api/sections/spoken_for/spoken_for", params: { signed_in_as: @person.id, name: "Taken" }
+
+      assert_equal "That name is spoken for", JSON.parse(response.body)["message"]
+    end
+
     private
 
     def section_named(key)
