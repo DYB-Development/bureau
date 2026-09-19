@@ -17,6 +17,10 @@ module Bureau
         template "action.rb.tt", "app/models/save_#{file_name}.rb"
       end
 
+      def write_the_partial
+        template "partial.html.erb.tt", "app/views/settings/_#{file_name}.html.erb"
+      end
+
       private
 
       def registration

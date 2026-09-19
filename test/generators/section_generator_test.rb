@@ -19,5 +19,11 @@ module Bureau
 
       assert_file "app/models/save_notifications.rb", /class SaveNotifications/
     end
+
+    test "it writes the partial the section draws" do
+      run_generator %w[notifications]
+
+      assert_file "app/views/settings/_notifications.html.erb", /submit_url/
+    end
   end
 end

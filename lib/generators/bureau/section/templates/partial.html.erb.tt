@@ -1,0 +1,6 @@
+<%%= ui_panel do %>
+  <%%= ui_form(action: submit_url, method: :patch) do %>
+    <%%= ui_form_field(attribute: "<%= file_name %>", label: "<%= human_name %>") %>
+    <%%= ui_button(label: "Save") %>
+  <%% end %>
+<%% end %>
