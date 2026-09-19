@@ -13,5 +13,11 @@ module Bureau
 
       assert_file "config/initializers/bureau.rb", /Bureau\.section :notifications/
     end
+
+    test "it writes the object a submitted change runs" do
+      run_generator %w[notifications]
+
+      assert_file "app/models/save_notifications.rb", /class SaveNotifications/
+    end
   end
 end
