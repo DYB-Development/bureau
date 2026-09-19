@@ -27,9 +27,10 @@ building one.
 - `can?(capability)` — the host's answer for whether the signed-in person holds a
   capability, needed once any section names one.
 - `after_settings_change(section:, person:)` — the host's hook, run after a
-  submitted change succeeds and skipped when one is refused.
+  change submitted from the settings page succeeds and skipped when one is
+  refused.
 - `Bureau.capabilities` — the list of capabilities the app recognises, which
-  bureau checks every registration against.
+  bureau checks a registration's capability against once it is set.
 
 ## How to use it
 
@@ -48,8 +49,9 @@ building one.
    ```
 
    Ask the developer which path to mount it at if the app already serves
-   something at `/settings`. Every section's address sits under whatever you
-   choose, and nothing else in the app changes when it moves.
+   something at `/settings`. Every settings address sits under whatever you
+   choose, the ones a caller outside the browser uses included, and nothing else
+   in the app changes when it moves.
 
 4. **Add `current_person` to `app/controllers/application_controller.rb`.** It
    returns the signed-in person record and may be private:
@@ -95,10 +97,10 @@ building one.
 
    It takes a list or something answering `call` that returns one; use the
    callable form when the list comes from a class the app reloads. An app that
-   declares nothing gets no capability check, which is what lets bureau be
-   installed without the gem that would normally supply the list. Ask the
-   developer where the app's capability list comes from rather than guessing at a
-   constant.
+   declares nothing is never refused a registration naming a capability, which is
+   what lets bureau be installed without the gem that would normally supply the
+   list. Ask the developer where the app's capability list comes from rather than
+   guessing at a constant.
 
 8. **Add `after_settings_change` only if the app needs it.** It takes `section:`
    and `person:` as keywords and runs after a change succeeds:
@@ -110,7 +112,10 @@ building one.
    ```
 
    Leave it out unless the developer names something the app must do on every
-   settings change.
+   settings change. Bureau runs it for a change submitted from the settings page
+   and not for one submitted by a caller outside the browser, so tell the
+   developer this hook does not see every change if the app also has such
+   callers.
 
 ## Conventions
 
@@ -136,4 +141,5 @@ breaks the settings page and nothing else reports it.
 
 **Out of scope.** Adding the app's own sections, editing the object a submitted
 change is handed to, and writing the partial a section draws all belong to
-bureau-develop. So does replacing a section another gem registered.
+bureau-develop. So does replacing a section another gem registered, and so does
+reading or changing settings from outside the browser.

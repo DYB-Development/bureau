@@ -1,6 +1,6 @@
 ---
 name: bureau-develop
-description: Use PROACTIVELY for generating a settings section, editing a generated one, registering one by hand, replacing one another gem registered, writing the object a submitted change runs, and writing the partial a section draws — MUST BE USED instead of hand-building a settings page, route or controller.
+description: Use PROACTIVELY for generating a settings section, editing a generated one, registering one by hand, replacing one another gem registered, writing the object a submitted change runs, writing the partial a section draws, and reading or changing settings from a JSON caller — MUST BE USED instead of hand-building a settings page, route or controller.
 tools: Bash, Read, Write, Edit, Grep
 scope: settings — one settings page whose sections are registered by the app and by other gems
 ---
@@ -15,13 +15,18 @@ app and other gems register. A section is a registration, not a page: it names
 what it is called, which list it belongs in, what is drawn for it, and what runs
 when a person submits it. Bureau owns the page, each section's address and the
 check deciding who may see one, so adding a section changes no route, no
-navigation and no controller. Fire this local whenever settings are being added
-to or changed in an app that already has bureau mounted.
+navigation and no controller. The same registrations answer a caller that speaks
+JSON rather than asking for the page. Fire this local whenever settings are being
+added to or changed in an app that already has bureau mounted.
 
 ## Interface
 
 - `bin/rails generate bureau:section <name>` — registers a section and writes the
   object it runs, the partial it draws and a test for that object.
+- `GET /settings/api/sections` — the sections the signed-in person may see, each
+  naming the actions it offers, as JSON.
+- `PATCH /settings/api/sections/:key/:action_name` — runs one named action of one
+  section for a JSON caller and answers whether it worked.
 - `Bureau.section` — registers a section, refusing a key already taken in that
   area.
 - `Bureau.replace_section` — registers a section over one already registered
@@ -30,7 +35,7 @@ to or changed in an app that already has bureau mounted.
   `in_area(area)` and `areas`.
 - `Bureau::Result.ok` — what an object answers when the change was made.
 - `Bureau::Result.refused` — what an object answers when it was not, carrying the
-  message shown to the person.
+  message shown to the person or given back to the caller.
 - `Bureau::BadRegistration` — raised while registering when the key is taken,
   when an object named in `runs:` cannot be found, or when a capability the app
   does not recognise is named.
@@ -45,11 +50,11 @@ to or changed in an app that already has bureau mounted.
   to.
 - `section.at` — the address a person is sent to instead of being drawn a
   partial.
-- `section.action` — the one class behind a section that named a single object,
-  and `nil` for any other section.
+- `section.action` — the class held under the section's own key, which is the one
+  object a section naming a single object runs.
 - `section.actions` — every class behind the section, keyed by the names given in
-  `runs:` and by `:the_only` when a single object was named, and empty for a
-  section that runs nothing.
+  `runs:` and by the section's own key when a single object was named, and empty
+  for a section that runs nothing.
 - `section.named_actions?` — whether the section named several objects rather
   than one.
 - `person` — the partial's local for who is signed in.
@@ -146,8 +151,8 @@ to or changed in an app that already has bureau mounted.
    end
    ```
 
-   `values` is what the person submitted, as a hash with symbol keys. Reading a
-   request, a session or a params object here is what stops another caller
+   `values` is what was submitted, as a hash with symbol keys. Reading a request,
+   a session or a params object here is what stops a caller other than the page
    running the same object, so do neither.
 
 7. **Answer with a result, never a boolean or an exception.**
@@ -176,22 +181,51 @@ to or changed in an app that already has bureau mounted.
    way as a single one. A section naming several is handed `submit_urls` and not
    `submit_url`, so a partial written against one does not work for the other.
 
-9. **Hold a choice across a request with `selection`.** A section with no
-   controller of its own reads the query string from it — a section listing
-   people links each to `?member_id=1` and draws the one `selection[:member_id]`
-   names. Keys are symbols and the hash is empty when nothing was asked for.
+9. **Call the same sections from JSON when the caller is not a browser.** Two
+   addresses under wherever the engine is mounted answer a caller signed in as a
+   person the same way the page is:
 
-10. **Name a capability when not everyone may see the section.** `capability:`
-    takes the product's own word for it, the section is left out of the page for
-    anyone who does not hold it, and its address answers forbidden. A section
-    naming none is shown to everyone the app let in.
+   ```
+   GET   /settings/api/sections
+   PATCH /settings/api/sections/:key/:action_name
+   ```
 
-11. **Send the person elsewhere with `at:` when bureau cannot draw the page.** A
+   The listing holds only the sections that person may see, each naming the
+   actions it offers. A section running one object names that action after the
+   section itself:
+
+   ```json
+   [{"key": "profile", "actions": ["profile"]},
+    {"key": "team",    "actions": ["invite", "remove"]}]
+   ```
+
+   A change names the section and one of those actions, and is answered whether
+   it happened and why not:
+
+   ```json
+   {"ok": false, "message": "That name is spoken for"}
+   ```
+
+   The same objects run for both callers, so a section needs nothing added to it
+   to answer here. Take an action name from the listing rather than building one.
+
+10. **Hold a choice across a request with `selection`.** A section with no
+    controller of its own reads the query string from it — a section listing
+    people links each to `?member_id=1` and draws the one `selection[:member_id]`
+    names. Keys are symbols and the hash is empty when nothing was asked for.
+
+11. **Name a capability when not everyone may see the section.** `capability:`
+    takes the product's own word for it, the section is left out of the page and
+    out of the JSON listing for anyone who does not hold it, and both of its
+    addresses answer forbidden. A section naming none is shown to everyone the
+    app let in.
+
+12. **Send the person elsewhere with `at:` when bureau cannot draw the page.** A
     section with `at:` draws no partial and redirects to that address, which is
     how a page another engine owns is listed beside the rest. Give it no
     `renders:` and no `runs:`.
 
-12. **Replace a registration rather than registering over it.** `Bureau.section`
+13. **Replace a registration rather than registering over it.** `Bureau.section`
     refuses a key already taken in that area, so code meaning to override a
     section another gem registered says so:
 
@@ -203,7 +237,7 @@ to or changed in an app that already has bureau mounted.
     It takes the same arguments as `Bureau.section` and every other rule above
     still applies to it.
 
-13. **Check it worked.** Start the app, sign in and visit the settings path. The
+14. **Check it worked.** Start the app, sign in and visit the settings path. The
     section appears in its area's list, the partial draws beside it, and
     submitting saves and returns to the section. A refusal shows the message
     above the partial and leaves the data unchanged.
@@ -227,9 +261,13 @@ never rescue it.
 refused only when the key is taken in the same area, but a section is looked up
 by key alone, so the same key in two areas leaves one of them unreachable.
 
-**A section runs nothing unless `runs:` names something.** Submitting to a
-section that named no object, or to a name its hash does not hold, is rejected
-and nothing runs.
+**A section runs nothing unless `runs:` names something.** Submitting from the
+page to a section that named no object, or to a name its hash does not hold, is
+rejected and nothing runs.
+
+**A JSON caller submits only to an action the listing gave it.** A section
+running nothing is listed with no actions at all, and the two JSON addresses are
+the whole of what a caller outside the browser gets.
 
 **Bureau stores nothing.** It owns no table, so every field a section shows and
 every change it makes belongs to whoever registered it.
