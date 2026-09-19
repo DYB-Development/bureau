@@ -41,6 +41,18 @@ switched to says which by defining `settings_account`. An app that defines
 neither gets `nil`, which is correct for a product whose settings are all
 personal.
 
+### Generating a section
+
+```
+bin/rails generate bureau:section reminders
+```
+
+It registers the section in the app's bureau initializer, creating that file if
+it is missing, and writes the object the section runs, the partial it draws and
+a test for the object. The generated test passes as written, and the section
+appears on the settings page with nothing further to wire. Everything it writes
+is a starting point to edit.
+
 ### Registering a section
 
 ```ruby

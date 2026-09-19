@@ -1,7 +1,7 @@
 ---
 name: bureau-develop
-description: Use PROACTIVELY for adding a settings section, replacing one another gem registered, writing the object a submitted change runs, and writing the partial a section draws — MUST BE USED instead of hand-building a settings page, route or controller.
-tools: Read, Write, Edit, Grep
+description: Use PROACTIVELY for generating a settings section, editing a generated one, registering one by hand, replacing one another gem registered, writing the object a submitted change runs, and writing the partial a section draws — MUST BE USED instead of hand-building a settings page, route or controller.
+tools: Bash, Read, Write, Edit, Grep
 scope: settings — one settings page whose sections are registered by the app and by other gems
 ---
 
@@ -20,6 +20,8 @@ to or changed in an app that already has bureau mounted.
 
 ## Interface
 
+- `bin/rails generate bureau:section <name>` — registers a section and writes the
+  object it runs, the partial it draws and a test for that object.
 - `Bureau.section` — registers a section, refusing a key already taken in that
   area.
 - `Bureau.replace_section` — registers a section over one already registered
@@ -45,7 +47,8 @@ to or changed in an app that already has bureau mounted.
   partial.
 - `section.action` — the one class behind a section that named a single object,
   and `nil` for any other section.
-- `section.actions` — every class behind the section, by name, and empty for a
+- `section.actions` — every class behind the section, keyed by the names given in
+  `runs:` and by `:the_only` when a single object was named, and empty for a
   section that runs nothing.
 - `section.named_actions?` — whether the section named several objects rather
   than one.
@@ -67,7 +70,30 @@ to or changed in an app that already has bureau mounted.
    area is any symbol and is commonly `:user`, `:team` or `:account`; sections
    sharing one are listed together under it.
 
-2. **Register it in a reload hook.** An app registers in
+2. **Read what is already there before writing anything.** A section may arrive
+   already registered, with an object, a partial and a test written for it, in
+   which case every step below is an edit to a file that exists rather than a new
+   file. Find the registration in `config/initializers/bureau.rb` or in the
+   registering gem's engine, and follow `renders:` and `runs:` to the partial and
+   the object they name.
+
+3. **Generate a new section rather than writing its files by hand.** The
+   generator takes the section's name and writes every file a working section
+   needs:
+
+   ```
+   bin/rails generate bureau:section reminders
+   ```
+
+   It adds the registration to `config/initializers/bureau.rb`, creating that
+   file with the reload hook already in it when it is missing. It writes
+   `app/models/save_reminders.rb`, `app/views/settings/_reminders.html.erb` and
+   `test/models/save_reminders_test.rb`. The generated test passes as written and
+   the section appears on the settings page with nothing further to wire. The
+   registration it writes always uses `area: :user` and names no capability, so
+   edit it to match the answers from step 1.
+
+4. **Register it in a reload hook.** An app not using the generator registers in
    `config/initializers/bureau.rb`, a gem in its own engine:
 
    ```ruby
@@ -83,7 +109,7 @@ to or changed in an app that already has bureau mounted.
    again, so a registration made anywhere but `to_prepare` is made once and then
    lost.
 
-3. **Write the partial `renders:` names.** The string is a partial path in the
+5. **Write the partial `renders:` names.** The string is a partial path in the
    host, so `"settings/password"` is `app/views/settings/_password.html.erb`. It
    is drawn inside the settings page, so it writes no page heading, no frame and
    no layout, and it uses keystone_ui helpers so it matches every other section:
@@ -101,7 +127,7 @@ to or changed in an app that already has bureau mounted.
    `submit_urls`, and nothing else — no request, no params, no controller. Submit
    with `method: :patch`.
 
-4. **Write the object `runs:` names.** Name the class as a string. It takes three
+6. **Write the object `runs:` names.** Name the class as a string. It takes three
    keywords and answers `call` with a result:
 
    ```ruby
@@ -124,13 +150,13 @@ to or changed in an app that already has bureau mounted.
    request, a session or a params object here is what stops another caller
    running the same object, so do neither.
 
-5. **Answer with a result, never a boolean or an exception.**
+7. **Answer with a result, never a boolean or an exception.**
    `Bureau::Result.ok` means the change was made and the person is sent back to
    the section. `Bureau::Result.refused("why not")` draws the section again with
    that message above it, saves nothing, and does not tell the host a change was
    made.
 
-6. **Give each thing its own name when the section does several.** `runs:` takes
+8. **Give each thing its own name when the section does several.** `runs:` takes
    a hash, and each name gets its own address in `submit_urls`:
 
    ```ruby
@@ -150,22 +176,22 @@ to or changed in an app that already has bureau mounted.
    way as a single one. A section naming several is handed `submit_urls` and not
    `submit_url`, so a partial written against one does not work for the other.
 
-7. **Hold a choice across a request with `selection`.** A section with no
+9. **Hold a choice across a request with `selection`.** A section with no
    controller of its own reads the query string from it — a section listing
    people links each to `?member_id=1` and draws the one `selection[:member_id]`
    names. Keys are symbols and the hash is empty when nothing was asked for.
 
-8. **Name a capability when not everyone may see the section.** `capability:`
-   takes the product's own word for it, the section is left out of the page for
-   anyone who does not hold it, and its address answers forbidden. A section
-   naming none is shown to everyone the app let in.
+10. **Name a capability when not everyone may see the section.** `capability:`
+    takes the product's own word for it, the section is left out of the page for
+    anyone who does not hold it, and its address answers forbidden. A section
+    naming none is shown to everyone the app let in.
 
-9. **Send the person elsewhere with `at:` when bureau cannot draw the page.** A
-   section with `at:` draws no partial and redirects to that address, which is
-   how a page another engine owns is listed beside the rest. Give it no
-   `renders:` and no `runs:`.
+11. **Send the person elsewhere with `at:` when bureau cannot draw the page.** A
+    section with `at:` draws no partial and redirects to that address, which is
+    how a page another engine owns is listed beside the rest. Give it no
+    `renders:` and no `runs:`.
 
-10. **Replace a registration rather than registering over it.** `Bureau.section`
+12. **Replace a registration rather than registering over it.** `Bureau.section`
     refuses a key already taken in that area, so code meaning to override a
     section another gem registered says so:
 
@@ -177,12 +203,19 @@ to or changed in an app that already has bureau mounted.
     It takes the same arguments as `Bureau.section` and every other rule above
     still applies to it.
 
-11. **Check it worked.** Start the app, sign in and visit the settings path. The
+13. **Check it worked.** Start the app, sign in and visit the settings path. The
     section appears in its area's list, the partial draws beside it, and
     submitting saves and returns to the section. A refusal shows the message
     above the partial and leaves the data unchanged.
 
 ## Conventions
+
+**A section that was generated rather than written saves nothing yet.** Its
+object answers `Bureau::Result.ok` without touching the person or the account,
+its partial holds one field named after the section, and its test asserts only
+that the object answers ok, so all three are edited before the section does
+anything. Edit the files in place and keep the object's three keywords and its
+result.
 
 **A registration that is wrong stops the app rather than the person.** Bureau
 raises `Bureau::BadRegistration` while registering for a key already taken in

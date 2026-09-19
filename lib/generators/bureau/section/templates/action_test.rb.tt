@@ -1,0 +1,9 @@
+require "test_helper"
+
+class <%= save_object %>Test < ActiveSupport::TestCase
+  test "it accepts a submitted change" do
+    result = <%= save_object %>.new(person: nil, account: nil, values: {}).call
+
+    assert result.ok?
+  end
+end

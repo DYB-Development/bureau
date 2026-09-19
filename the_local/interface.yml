@@ -10,6 +10,7 @@ install:
   - Bureau.capabilities
 
 develop:
+  - bin/rails generate bureau:section
   - Bureau.section
   - Bureau.replace_section
   - Bureau.registry
@@ -49,4 +50,5 @@ sources:
   - app/models/bureau/change_name.rb
   - test/dummy/app/controllers/application_controller.rb
   - test/dummy/app/models/dummy_settings.rb
+  - lib/generators/bureau/section/section_generator.rb
   - lib/bureau/reference/guide.md
