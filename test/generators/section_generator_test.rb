@@ -25,5 +25,11 @@ module Bureau
 
       assert_file "app/views/settings/_notifications.html.erb", /submit_url/
     end
+
+    test "it writes a test for the section" do
+      run_generator %w[notifications]
+
+      assert_file "test/models/save_notifications_test.rb", /class SaveNotificationsTest/
+    end
   end
 end

@@ -21,6 +21,10 @@ module Bureau
         template "partial.html.erb.tt", "app/views/settings/_#{file_name}.html.erb"
       end
 
+      def write_the_test
+        template "action_test.rb.tt", "test/models/save_#{file_name}_test.rb"
+      end
+
       private
 
       def registration
