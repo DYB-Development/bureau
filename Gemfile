@@ -16,3 +16,6 @@ gem "rubocop-rails-omakase", require: false
 # gem "debug", ">= 1.0.0"
 
 gem "json", "< 3"
+
+# Resident Claude Code experts shipped with the gem [https://github.com/DYB-Development/the_local]
+gem "the_local", "~> 0.4.1"
