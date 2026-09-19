@@ -31,5 +31,12 @@ module Bureau
 
       assert_file "test/models/save_notifications_test.rb", /class SaveNotificationsTest/
     end
+
+    test "the object it writes accepts a submitted change" do
+      run_generator %w[notifications]
+      load File.join(destination_root, "app/models/save_notifications.rb")
+
+      assert SaveNotifications.new(person: nil, account: nil, values: {}).call.ok?
+    end
   end
 end
