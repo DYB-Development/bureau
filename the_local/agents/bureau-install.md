@@ -34,8 +34,7 @@ building one.
 ## How to use it
 
 1. **Add the gem.** Put `gem "bureau"` in the app's `Gemfile` and run `bundle
-   install`. There is no generator, no initializer to copy and no migration to
-   run, because bureau owns no database table.
+   install`. There is no migration to run, because bureau owns no database table.
 
 2. **Check keystone_ui is hooked up.** Bureau draws every page with keystone_ui
    and brings it in as a dependency, so a host that has not set keystone_ui up
@@ -88,7 +87,7 @@ building one.
    whose sections all name none does not need this method.
 
 7. **Declare the app's capabilities, if it has any.** Assign `Bureau.capabilities`
-   in `config/initializers/bureau.rb`:
+   in `config/initializers/bureau.rb`, creating that file if the app has none:
 
    ```ruby
    Bureau.capabilities = -> { Citizen.capabilities }
@@ -135,6 +134,6 @@ for is never shown.
 the app's current-person method, or changing which account settings act on,
 breaks the settings page and nothing else reports it.
 
-**Out of scope.** Registering a section, the object a submitted change is handed
-to, and the partial a section draws all belong to bureau-develop. So does
-replacing a section another gem registered.
+**Out of scope.** Adding the app's own sections, editing the object a submitted
+change is handed to, and writing the partial a section draws all belong to
+bureau-develop. So does replacing a section another gem registered.
