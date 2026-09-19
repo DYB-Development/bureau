@@ -38,5 +38,21 @@ module Bureau
 
       assert SaveNotifications.new(person: nil, account: nil, values: {}).call.ok?
     end
+
+    test "bureau accepts the registration it writes" do
+      run_generator %w[reminders]
+      load File.join(destination_root, "app/models/save_reminders.rb")
+      run_the_registration
+
+      assert Bureau.registry.find(:reminders)
+    ensure
+      Bureau.prepare!
+    end
+
+    private
+
+    def run_the_registration
+      instance_eval(File.read(File.join(destination_root, "config/initializers/bureau.rb"))[/^  Bureau\.section.*$/])
+    end
   end
 end
