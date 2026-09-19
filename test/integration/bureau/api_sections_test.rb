@@ -15,5 +15,13 @@ module Bureau
 
       assert_includes JSON.parse(response.body).map { |section| section["key"] }, "profile"
     end
+
+    test "a caller is not given a section the person may not see" do
+      Bureau.replace_section :team, area: :team, title: "Team", capability: :manage_team
+
+      get "/bureau/api/sections", params: { signed_in_as: @person.id }
+
+      assert_not_includes JSON.parse(response.body).map { |section| section["key"] }, "team"
+    end
   end
 end
