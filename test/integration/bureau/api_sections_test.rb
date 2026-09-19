@@ -57,6 +57,12 @@ module Bureau
       assert_response :forbidden
     end
 
+    test "the JSON path draws no page" do
+      get "/bureau/api/sections", params: { signed_in_as: @person.id }
+
+      assert_equal "application/json", response.media_type
+    end
+
     private
 
     def section_named(key)
