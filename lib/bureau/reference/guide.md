@@ -166,6 +166,34 @@ frame and no layout, because it is rendered inside the settings page:
 controller of its own — a section listing people links each one to
 `?member_id=1` and reads `selection[:member_id]` to draw that person.
 
+### Calling it from JSON
+
+The same registrations and the same objects answer a caller that speaks JSON,
+signed in as a person the same way the page is:
+
+```
+GET   /settings/api/sections
+PATCH /settings/api/sections/:key/:action_name
+```
+
+The listing gives back only the sections that person holds the capability for,
+each naming the actions it offers. A section running one object names that
+action after the section itself, so `profile` offers the action `profile`.
+
+```json
+[{"key": "profile", "actions": ["profile"]},
+ {"key": "team",    "actions": ["invite", "remove"]}]
+```
+
+A change answers whether it worked and why not:
+
+```json
+{"ok": false, "message": "That name is spoken for"}
+```
+
+A caller naming a section the person may not see is refused, and a refused
+change saves nothing.
+
 ### A section that does several things
 
 `runs:` takes a hash when a section offers more than one thing. Each gets its

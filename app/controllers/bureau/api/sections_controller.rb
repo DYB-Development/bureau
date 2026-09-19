@@ -8,6 +8,8 @@ module Bureau
       end
 
       def update
+        return head :unprocessable_content unless requested_action
+
         result = requested_action.new(person: current_person, account: account_settings_act_on, values: submitted_values).call
 
         render json: { ok: result.ok?, message: result.message }

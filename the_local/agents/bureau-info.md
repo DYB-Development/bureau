@@ -19,10 +19,12 @@ no routing, no navigation and no controller in the host.
 
 Reach for it when a product needs one settings page that several parts of the
 codebase contribute to — the app's own settings beside settings that belong to
-gems the app installs. Bureau owns no database table and stores nothing; every
-section's data belongs to whoever registered it. Every page is drawn with
-keystone_ui, so a host that does not use keystone_ui gets a settings page that
-does not match the rest of it.
+gems the app installs. Those same registrations also answer a caller that speaks
+JSON rather than asking for the page, so a client outside the browser reads and
+changes settings without the app building a second interface for them. Bureau
+owns no database table and stores nothing; every section's data belongs to
+whoever registered it. Every page is drawn with keystone_ui, so a host that does
+not use keystone_ui gets a settings page that does not match the rest of it.
 
 ## Interface
 
@@ -34,15 +36,17 @@ none of it.
   act on, and telling bureau which capabilities the app recognises.
 - **bureau-develop** — writing a new section's starting files, registering a
   section by hand, replacing one another gem registered, the object a section
-  hands a submitted change to, the result that object answers with, and the
-  locals its partial is drawn with.
+  hands a submitted change to, the result that object answers with, the locals
+  its partial is drawn with, and the addresses a JSON caller reads and submits
+  at.
 
 ## How to use it
 
 - Putting bureau into an app for the first time, or an app has it and no section
   is appearing — **bureau-install**.
 - Starting a section from nothing, editing one that was generated, registering
-  one by hand, or changing one that already exists — **bureau-develop**.
+  one by hand, changing one that already exists, or calling settings from
+  outside the browser — **bureau-develop**.
 
 Both, in that order, when an app is taking bureau and its first section in the
 same pass.
@@ -62,19 +66,26 @@ is mounted. A registration taking a key already held in that area is refused
 when the app starts rather than in front of a person, and a section is found by
 key alone, so the same key in two areas leaves one of them unreachable.
 
+**Action** — one thing a person can do in a section, named by a symbol and
+answered by its own object. A section that offers several names each of them; a
+section that offers one has that action named after the section itself, so a
+caller addresses every action the same way whichever kind it is.
+
 **Capability** — the product's word for what a person must hold to see a
-section. A section that names none is shown to everyone signed in. The host
-answers whether the signed-in person holds one, and an app that never declares
-which capabilities exist gets no check at all, which is what lets bureau be
-installed without the gem that would normally supply them.
+section. A section that names none is shown to everyone signed in, and the host
+answers whether the signed-in person holds one. The refusal to register a
+capability the app does not recognise runs only once the app declares which
+capabilities exist, which is what lets bureau be installed without the gem that
+would normally supply them.
 
 **Registration time** — registrations are made in the reload hook rather than at
 boot, and bureau clears what it holds on each reload, so the set of sections is
 rebuilt from scratch every time the code reloads.
 
 **Refusal** — a submitted change that did not happen. The object behind the
-section says so with a message, the section is drawn again with that message
-above it, nothing is saved, and the host is not told a change was made.
+section says so with a message, nothing is saved, and the host is not told a
+change was made. A person is drawn the section again with the message above it,
+and a JSON caller is answered that it did not happen and given the same message.
 
 **Generated code is a starting point.** A section written from nothing runs and
 its test passes as written, and everything in it is meant to be edited rather

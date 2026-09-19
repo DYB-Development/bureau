@@ -63,6 +63,12 @@ module Bureau
       assert_equal "application/json", response.media_type
     end
 
+    test "a caller naming an action the section does not offer is refused" do
+      patch "/bureau/api/sections/nickname/not_an_action", params: { signed_in_as: @person.id }
+
+      assert_response :unprocessable_content
+    end
+
     private
 
     def section_named(key)

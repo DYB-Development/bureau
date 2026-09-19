@@ -11,6 +11,8 @@ install:
 
 develop:
   - bin/rails generate bureau:section
+  - GET /settings/api/sections
+  - PATCH /settings/api/sections/:key/:action_name
   - Bureau.section
   - Bureau.replace_section
   - Bureau.registry
@@ -44,6 +46,7 @@ sources:
   - config/routes.rb
   - app/controllers/bureau/application_controller.rb
   - app/controllers/bureau/sections_controller.rb
+  - app/controllers/bureau/api/sections_controller.rb
   - app/controllers/bureau/settings_controller.rb
   - app/views/bureau/settings/show.html.erb
   - app/views/bureau/sections/_profile.html.erb
