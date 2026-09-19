@@ -13,12 +13,12 @@ module Bureau
     end
 
     def action
-      actions[:the_only]
+      actions[key]
     end
 
     def actions
       return {} if runs.nil?
-      return { the_only: runs.constantize } unless runs.is_a?(Hash)
+      return { key => runs.constantize } unless runs.is_a?(Hash)
 
       runs.transform_values(&:constantize)
     end
