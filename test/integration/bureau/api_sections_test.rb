@@ -30,6 +30,12 @@ module Bureau
       assert_equal %w[invite rename], section_named("team")["actions"]
     end
 
+    test "a caller runs an action and is told it succeeded" do
+      patch "/bureau/api/sections/nickname/nickname", params: { signed_in_as: @person.id, name: "Renamed Person" }
+
+      assert JSON.parse(response.body)["ok"]
+    end
+
     private
 
     def section_named(key)
